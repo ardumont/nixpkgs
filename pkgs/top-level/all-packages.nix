@@ -9142,6 +9142,8 @@ let
     fftw = fftwSinglePrec;
   };
 
+  tux-guitar = callPackage ../applications/misc/tux-guitar { };
+
   photivo = callPackage ../applications/graphics/photivo { };
 
   wavesurfer = callPackage ../applications/misc/audio/wavesurfer { };
