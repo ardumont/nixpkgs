@@ -9,7 +9,7 @@ stdenv.mkDerivation rec {
 
   src = fetchgit {
     inherit rev;
-    url = "git://github.com/felipec/git-remote-hg.git";
+    url = "https://github.com/felipec/git-remote-hg.git";
     sha256 = "1hc65nvxq7if1imwffyxia0i6vnkbax09gfcl9vq9yffzi8xzzfy";
   };
 
