@@ -189,6 +189,8 @@ rec {
 
   evolution = callPackage ./apps/evolution { };
 
+  evolution-mapi = callPackage ./apps/evolution-mapi { };
+
   file-roller = callPackage ./apps/file-roller { };
 
   gedit = callPackage ./apps/gedit { };
