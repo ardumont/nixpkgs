@@ -5024,6 +5024,8 @@ let
     inherit (xorg) utilmacros libX11;
   };
 
+  openchange = callPackage ../development/libraries/openchange { };
+
   esdl = callPackage ../development/libraries/esdl { };
 
   exiv2 = callPackage ../development/libraries/exiv2 { };
@@ -7713,6 +7715,8 @@ let
   };
 
   samba = callPackage ../servers/samba { };
+
+  samba4 = callPackage ../servers/samba4 { };
 
   # A lightweight Samba, useful for non-Linux-based OSes.
   samba_light = lowPrio (callPackage ../servers/samba {
