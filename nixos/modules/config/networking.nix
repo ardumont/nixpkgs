@@ -39,6 +39,28 @@ in
       '';
     };
 
+    networking.proxy = lib.mkOption {
+      type = types.str;
+      default = "";
+      description = ''
+        This option specifies the *_proxy for the users in the environment.
+        It is just exporting the http_proxy, https_proxy, ftp_proxy, rsync_proxy
+        with that value.
+        This also exports a basic no_proxy environment.
+      '';
+      example = "http://127.0.0.1:3128";
+    };
+
+    networking.envVarsProxy = mkOption {
+      type = types.attrs;
+      internal = true;
+      default = {};
+      description = ''
+        Environment variables used by networking (was specifically open for networking.proxy).
+        If you want to specify environment variables, use `nix.envVars`.
+      '';
+    };
+
   };
 
   config = {
@@ -84,6 +106,14 @@ in
               dnsmasq_conf=/etc/dnsmasq-conf.conf
               dnsmasq_resolv=/etc/dnsmasq-resolv.conf
             '';
+      };
+
+      networking.envVarsProxy = optionalAttrs (cfg.proxy != "") {
+        http_proxy = cfg.proxy;
+        https_proxy = cfg.proxy;
+        ftp_proxy = cfg.proxy;
+        rsync_proxy = cfg.proxy;
+        no_proxy = "localhost,127.0.0.1";
       };
 
     # The ‘ip-up’ target is started when we have IP connectivity.  So

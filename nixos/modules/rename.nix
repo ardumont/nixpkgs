@@ -107,6 +107,9 @@ in zipModules ([]
 ++ obsolete [ "services" "xserver" "startOpenSSHAgent" ] [ "programs" "ssh" "startAgent" ]
 ++ obsolete [ "services" "xserver" "windowManager" "xbmc" ] [ "services" "xserver" "desktopManager" "xbmc" ]
 
+# proxy
+++ obsolete [ "nix" "proxy" ] [ "networking" "proxy"]
+
 # KDE
 ++ deprecated [ "kde" "extraPackages" ] [ "environment" "kdePackages" ]
 # ++ obsolete [ "environment" "kdePackages" ] [ "environment" "systemPackages" ] # !!! doesn't work!
