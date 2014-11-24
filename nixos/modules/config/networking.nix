@@ -39,26 +39,79 @@ in
       '';
     };
 
-    networking.proxy = lib.mkOption {
-      type = types.str;
-      default = "";
-      description = ''
-        This option specifies the *_proxy for the users in the environment.
-        It is just exporting the http_proxy, https_proxy, ftp_proxy, rsync_proxy
-        with that value.
-        This also exports a basic no_proxy environment.
-      '';
-      example = "http://127.0.0.1:3128";
-    };
+    networking.proxy = {
 
-    networking.envVarsProxy = mkOption {
-      type = types.attrs;
-      internal = true;
-      default = {};
-      description = ''
-        Environment variables used by networking (was specifically open for networking.proxy).
-        If you want to specify environment variables, use `nix.envVars`.
-      '';
+      default = lib.mkOption {
+        type = types.str;
+        default = "";
+        description = ''
+          This option specifies the *_proxy for the users in the environment.
+          It is exporting the http_proxy, https_proxy, ftp_proxy, rsync_proxy
+          with that value.
+          You can also define a dedicated http-proxy, https-proxy, ftp-proxy, rsync-proxy or no-proxy.
+        '';
+        example = "http://127.0.0.1:3128";
+      };
+
+      http-proxy = lib.mkOption {
+        type = types.str;
+        default = "";
+        description = ''
+          This option specifies the http_proxy for the users in the environment.
+          It is just exporting the http_proxy with that value.
+        '';
+        example = "http://127.0.0.1:3128";
+      };
+
+      https-proxy = lib.mkOption {
+        type = types.str;
+        default = "";
+        description = ''
+          This option specifies the https_proxy for the users in the environment.
+          It is just exporting the https_proxy with that value.
+        '';
+        example = "http://127.0.0.1:3128";
+      };
+
+      ftp-proxy = lib.mkOption {
+        type = types.str;
+        default = "";
+        description = ''
+          This option specifies the ftp_proxy for the users in the environment.
+          It is just exporting the ftp_proxy with that value.
+        '';
+        example = "http://127.0.0.1:3128";
+      };
+
+      rsync-proxy = lib.mkOption {
+        type = types.str;
+        default = "";
+        description = ''
+          This option specifies the rsync_proxy for the users in the environment.
+          It is just exporting the rsync_proxy with that value.
+        '';
+        example = "http://127.0.0.1:3128";
+      };
+
+      no-proxy = lib.mkOption {
+        type = types.str;
+        default = "";
+        description = ''
+          This option specifies the no_proxy for the users in the environment.
+          It is just exporting the no_proxy with that value.
+        '';
+        example = "127.0.0.1,localhost,.localdomain";
+      };
+
+      envVars = lib.mkOption {
+        type = types.attrs;
+        internal = true;
+        default = {};
+        description = ''
+          Environment variables used by networking (was specifically open for networking.proxy.*).
+          If you want to specify environment variables, use `nix.envVars`.
+        '';
+      };
     };
 
   };
@@ -108,19 +161,29 @@ in
             '';
       };
 
-      networking.envVarsProxy = optionalAttrs (cfg.proxy != "") {
-        http_proxy = cfg.proxy;
-        https_proxy = cfg.proxy;
-        ftp_proxy = cfg.proxy;
-        rsync_proxy = cfg.proxy;
-        no_proxy = "localhost,127.0.0.1";
-      };
+      networking.proxy.envVars =
+        optionalAttrs (cfg.proxy.default != "") {
+          http_proxy = cfg.proxy.default;
+          https_proxy = cfg.proxy.default;
+          rsync_proxy = cfg.proxy.default;
+          ftp_proxy = cfg.proxy.default;
+          no_proxy = "127.0.0.1,localhost";
+        } // optionalAttrs (cfg.proxy.http-proxy != "") {
+          http_proxy  = cfg.proxy.http-proxy;
+        } // optionalAttrs (cfg.proxy.https-proxy != "") {
+          https_proxy = cfg.proxy.https-proxy;
+        } // optionalAttrs (cfg.proxy.rsync-proxy != "") {
+          rsync_proxy = cfg.proxy.rsync-proxy;
+        } // optionalAttrs (cfg.proxy.ftp-proxy != "") {
+          ftp_proxy   = cfg.proxy.ftp-proxy;
+        } // optionalAttrs (cfg.proxy.no-proxy != "") {
+          no_proxy    = cfg.proxy.no-proxy;
+        };
 
     # The ‘ip-up’ target is started when we have IP connectivity.  So
     # services that depend on IP connectivity (like ntpd) should be
     # pulled in by this target.
     systemd.targets.ip-up.description = "Services Requiring IP Connectivity";
-
   };
 
-}
+  }

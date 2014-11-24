@@ -309,7 +309,7 @@ in
       };
 
     # Set up the environment variables for running Nix.
-    environment.sessionVariables = cfg.envVars // config.networking.envVarsProxy;
+    environment.sessionVariables = cfg.envVars // config.networking.proxy.envVars;
 
     environment.extraInit =
       ''
