@@ -3,11 +3,11 @@
 let
   inherit (lib) mkOption mkIf optionals literalExample;
   cfg = config.services.xserver.windowManager.xmonad;
-  xmonadEnv = cfg.haskellPackages.ghcWithPackages(self: [
-    self.xmonad
-  ] ++ optionals cfg.enableContribAndExtras [ self.xmonadContrib self.xmonadExtras]
-    ++ optionals (cfg.extraPackages != null) (cfg.extraPackages self));
-  xmessage = pkgs.xlibs.xmessage;
+  xmonad = cfg.haskellPackages.xmonad-with-packages.override {
+    packages = self: cfg.extraPackages self ++
+                     optionals cfg.enableContribAndExtras
+                     [ self.xmonadContrib self.xmonadExtras ];
+  };
 in
 {
   options = {
@@ -31,7 +31,7 @@ in
       };
 
       extraPackages = mkOption {
-        default = null;
+        default = self: [];
         example = literalExample ''
           haskellPackages: [
             haskellPackages.xmonadContrib
@@ -58,12 +58,12 @@ in
       session = [{
         name = "xmonad";
         start = ''
-          XMONAD_GHC=${xmonadEnv}/bin/ghc XMONAD_XMESSAGE=${xmessage}/bin/xmessage xmonad &
+          ${xmonad}/bin/xmonad &
           waitPID=$!
         '';
       }];
     };
 
-    environment.systemPackages = [ cfg.haskellPackages.xmonad ];
+    environment.systemPackages = [ xmonad ];
   };
 }

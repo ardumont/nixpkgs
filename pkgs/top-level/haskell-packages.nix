@@ -3102,6 +3102,10 @@ self : let callPackage = x : y : modifyPrio (newScope self x y); in
 
   xmonad = callPackage ../applications/window-managers/xmonad {};
 
+  xmonad-with-packages = callPackage ../applications/window-managers/xmonad/wrapper.nix {
+    packages = self : [];
+  };
+
   xmonadContrib = callPackage ../applications/window-managers/xmonad/xmonad-contrib.nix {};
 
   xmonadExtras = callPackage ../applications/window-managers/xmonad/xmonad-extras.nix {};
