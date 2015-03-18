@@ -12274,6 +12274,10 @@ let
     GConf2 = gnome2.GConf;
   };
 
+  xmonad-src = callPackage ../applications/window-managers/xmonad-src { };
+
+  xmonad-snapshot = callPackage ../applications/window-managers/xmonad-snapshot { };
+
   libxpdf = callPackage ../applications/misc/xpdf/libxpdf.nix { };
 
   xpra = callPackage ../tools/X11/xpra { inherit (texFunctions) fontsConf; };
