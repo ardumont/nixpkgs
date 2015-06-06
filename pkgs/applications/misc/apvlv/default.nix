@@ -15,14 +15,11 @@
 
 stdenv.mkDerivation rec {
   version = "0.1.f7f7b9c";
-  # version = "0.1.5";
   name = "apvlv-${version}";
 
   src = fetchurl {
     url = "https://github.com/downloads/naihe2010/apvlv/${name}-Source.tar.gz";
     sha256 = "125nlcfjdhgzi9jjxh9l2yc9g39l6jahf8qh2555q20xkxf4rl0w";
-    # url = "https://github.com/naihe2010/apvlv/archive/v${version}.tar.gz";
-    # sha256 = "12ha212a8c9z02q3in47ggf1762l4vm52isisq9fr7rwwrbq3afw";
   };
 
   preConfigure = ''
