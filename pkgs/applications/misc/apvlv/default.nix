@@ -28,8 +28,9 @@ stdenv.mkDerivation rec {
 
   buildInputs = [
     pkgconfig cmake
-     poppler poppler_data
-     freetype gtk2 libpthreadstubs libXdmcp libxshmfence libxkbcommon epoxy
+     poppler
+     freetype gtk2
+     libpthreadstubs libXdmcp libxshmfence # otherwise warnings in compilation
    ];
 
   installPhase = ''
