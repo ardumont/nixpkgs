@@ -2,7 +2,7 @@
 , fetchurl
 , cmake
 , pkgconfig
-, gtk3
+, gtk2
 , poppler
 , poppler_data
 # , poppler_utils
@@ -17,15 +17,15 @@
 }:
 
 stdenv.mkDerivation rec {
-  # version = "0.1.f7f7b9c";
-  version = "0.1.5";
+  version = "0.1.f7f7b9c";
+  # version = "0.1.5";
   name = "apvlv-${version}";
 
   src = fetchurl {
-    # url = "https://github.com/downloads/naihe2010/apvlv/${name}-Source.tar.gz";
-    # sha256 = "1rbp54mr3z2x3a3a1qmz8byzygzi223vckfam9ib5g1sfds0qf8i";
-    url = "https://github.com/naihe2010/apvlv/archive/v${version}.tar.gz";
-    sha256 = "12ha212a8c9z02q3in47ggf1762l4vm52isisq9fr7rwwrbq3afw";
+    url = "https://github.com/downloads/naihe2010/apvlv/${name}-Source.tar.gz";
+    sha256 = "125nlcfjdhgzi9jjxh9l2yc9g39l6jahf8qh2555q20xkxf4rl0w";
+    # url = "https://github.com/naihe2010/apvlv/archive/v${version}.tar.gz";
+    # sha256 = "12ha212a8c9z02q3in47ggf1762l4vm52isisq9fr7rwwrbq3afw";
   };
 
   preConfigure = ''
@@ -35,7 +35,7 @@ stdenv.mkDerivation rec {
   buildInputs = [
     pkgconfig cmake
      poppler poppler_data
-     freetype gtk3 libpthreadstubs libXdmcp libxshmfence libxkbcommon epoxy
+     freetype gtk2 libpthreadstubs libXdmcp libxshmfence libxkbcommon epoxy
    ];
 
   installPhase = ''
@@ -52,7 +52,7 @@ stdenv.mkDerivation rec {
     # pdf startup as doc
     mkdir -p $out/share/doc/apvlv/
     cp ../Startup.pdf $out/share/doc/apvlv/Startup.pdf
-    cp ../main_menubar.glade $out/share/doc/apvlv/
+    # cp ../main_menubar.glade $out/share/doc/apvlv/
   '';
 
   meta = {
