@@ -1,16 +1,5 @@
-{ stdenv
-, fetchurl
-, cmake
-, pkgconfig
-, gtk2
-, poppler
-, poppler_data
-, freetype
-, libpthreadstubs
-, libXdmcp
-, libxshmfence
-, libxkbcommon
-, epoxy
+{ stdenv, fetchurl, cmake, pkgconfig,
+  gtk2 , poppler, freetype, libpthreadstubs, libXdmcp, libxshmfence
 }:
 
 stdenv.mkDerivation rec {
