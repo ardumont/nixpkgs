@@ -5,15 +5,12 @@
 , gtk2
 , poppler
 , poppler_data
-# , poppler_utils
 , freetype
 , libpthreadstubs
 , libXdmcp
 , libxshmfence
 , libxkbcommon
 , epoxy
-# , git
-# , tree
 }:
 
 stdenv.mkDerivation rec {
@@ -39,11 +36,6 @@ stdenv.mkDerivation rec {
    ];
 
   installPhase = ''
-    # echo "pwd: `pwd`"
-    # tree ..
-    # echo "out: $out"
-    # tree $out
-
     # binary
     mkdir -p $out/bin
     cp src/apvlv $out/bin/apvlv
@@ -52,7 +44,6 @@ stdenv.mkDerivation rec {
     # pdf startup as doc
     mkdir -p $out/share/doc/apvlv/
     cp ../Startup.pdf $out/share/doc/apvlv/Startup.pdf
-    # cp ../main_menubar.glade $out/share/doc/apvlv/
   '';
 
   meta = {
