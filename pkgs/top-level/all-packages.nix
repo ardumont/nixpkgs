@@ -5252,6 +5252,8 @@ in
 
   sqldeveloper = callPackage ../development/tools/database/sqldeveloper { };
 
+  pixum = callPackage ../development/tools/pixum { };
+
   squeak = callPackage ../development/compilers/squeak { };
 
   stalin = callPackage ../development/compilers/stalin { };
