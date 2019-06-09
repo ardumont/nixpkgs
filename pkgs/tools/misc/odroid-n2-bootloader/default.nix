@@ -1,14 +1,9 @@
-{ stdenv, lib, fetchFromGitHub, coreutils, ubootOdroidN2, runtimeShell }:
+{ stdenv, lib, fetchFromGitHub, coreutils, ubootOdroidN2, runtimeShell, hardkernel-u-boot }:
 
 stdenv.mkDerivation {
   name = "odroid-n2-bootloader-2015-01";
 
-  src = fetchFromGitHub {
-    owner = "hardkernel";
-    repo = "u-boot";
-    rev = "3d9641f2acf212180d11fdc5040b741c8d3af1e3";
-    sha256 = "0y5mrng1d5f4qdrghm3jnjaqns38p1ys9n07hr717v563qz94k02";
-  };
+  src = hardkernel-u-boot;
 
   buildCommand = ''
     install -Dm644 -t $out/lib/sd_fuse-n2 $src/sd_fuse/hardkernel_1mb_uboot/{bl2,tzsw}.*

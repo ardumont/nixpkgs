@@ -1,34 +1,45 @@
-{ stdenv, lib, fetchurl, fetchpatch, bc, bison, dtc, flex, openssl, swig
+{ stdenv, lib, fetchurl, fetchpatch, bc, bison, dtc, flex, openssl, swig, gcc48
 , armTrustedFirmwareAllwinner
 , buildPackages
+, fetchFromGitHub
 }:
 
 let
+  hardkernel-u-boot = fetchFromGitHub {
+    owner = "hardkernel";
+    repo = "u-boot";
+    rev = "3d9641f2acf212180d11fdc5040b741c8d3af1e3";
+    sha256 = "0y5mrng1d5f4qdrghm3jnjaqns38p1ys9n07hr717v563qz94k02";
+  };
+  u-boot = version: fetchurl {
+    url = "ftp://ftp.denx.de/pub/u-boot/u-boot-${version}.tar.bz2";
+    sha256 = "1vwv4bgbl7fjcm073zrphn17hnz5h5h778f88ivdsgbb2lnpgdvn";
+  };
+  u-boot-default-patches = [
+    (fetchpatch {
+      url = https://github.com/dezgeg/u-boot/commit/extlinux-path-length-2018-03.patch;
+      sha256 = "07jafdnxvqv8lz256qy29agjc2k1zj5ad4k28r1w5qkhwj4ixmf8";
+    })
+  ];
   buildUBoot = { version ? "2019.04"
             , filesToInstall
             , installDir ? "$out"
             , defconfig
             , extraConfig ? ""
+            , defaultPatches ? u-boot-default-patches
             , extraPatches ? []
             , extraMakeFlags ? []
             , extraMeta ? {}
+            , src ? u-boot version
+            , ccCompiler ? stdenv.cc
             , ... } @ args:
            stdenv.mkDerivation (rec {
 
     pname = "uboot-${defconfig}";
     inherit version;
+    inherit src;
 
-    src = fetchurl {
-      url = "ftp://ftp.denx.de/pub/u-boot/u-boot-${version}.tar.bz2";
-      sha256 = "1vwv4bgbl7fjcm073zrphn17hnz5h5h778f88ivdsgbb2lnpgdvn";
-    };
-
-    patches = [
-      (fetchpatch {
-        url = https://github.com/dezgeg/u-boot/commit/extlinux-path-length-2018-03.patch;
-        sha256 = "07jafdnxvqv8lz256qy29agjc2k1zj5ad4k28r1w5qkhwj4ixmf8";
-      })
-    ] ++ extraPatches;
+    patches = defaultPatches ++ extraPatches;
 
     postPatch = ''
       patchShebangs tools
@@ -49,10 +60,15 @@ let
 
     makeFlags = [
       "DTC=dtc"
-      "CROSS_COMPILE=${stdenv.cc.targetPrefix}"
+      "CROSS_COMPILE=${ccCompiler.targetPrefix}"
     ] ++ extraMakeFlags;
 
     passAsFile = [ "extraConfig" ];
+
+    # FIXME: should be a patch
+    preConfigure = ''
+      sed -i -e 's/\/bin\/pwd/pwd/' Makefile
+    '';
 
     configurePhase = ''
       runHook preConfigure
@@ -164,6 +180,9 @@ in rec {
   };
 
   ubootOdroidN2 = buildUBoot rec {
+    src = hardkernel-u-boot;
+    ccCompiler = gcc48;
+    defaultPatches = [ ];
     defconfig = "odroidn2_defconfig";
     extraMeta.platforms = ["aarch64-linux"];
     filesToInstall = ["u-boot-dtb.bin"];
