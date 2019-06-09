@@ -163,6 +163,12 @@ in rec {
     filesToInstall = ["u-boot.bin" "SPL"];
   };
 
+  ubootOdroidN2 = buildUBoot rec {
+    defconfig = "odroidn2_defconfig";
+    extraMeta.platforms = ["aarch64-linux"];
+    filesToInstall = ["u-boot-dtb.bin"];
+  };
+
   ubootOdroidXU3 = buildUBoot rec {
     defconfig = "odroid-xu3_defconfig";
     extraMeta.platforms = ["armv7l-linux"];
